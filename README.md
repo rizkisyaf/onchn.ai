@@ -34,33 +34,33 @@ A comprehensive platform for managing and orchestrating AI agents with different
 ## Setup
 
 1. Clone the repository:
-\`\`\`bash
+```bash
 git clone https://github.com/yourusername/ai-agent-platform.git
 cd ai-agent-platform
-\`\`\`
+```
 
 2. Install dependencies:
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+```
 
 3. Set up environment variables:
    - Copy `.env.local.example` to `.env.local`
    - Fill in the required API keys and configuration
 
 4. Set up the database:
-\`\`\`bash
+```bash
 # Create database
 npx prisma db push
 
 # Generate Prisma Client
 npx prisma generate
-\`\`\`
+```
 
 5. Run the development server:
-\`\`\`bash
+```bash
 npm run dev
-\`\`\`
+```
 
 ## Architecture
 
