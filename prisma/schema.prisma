@@ -1,0 +1,93 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["extendedWhereUnique"]
+}
+
+model Agent {
+  id           String   @id @default(uuid())
+  name         String   @unique
+  role         String
+  status       String
+  capabilities Json
+  tasks        Task[]
+  messages     Message[]
+  memories     Memory[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Task {
+  id           String   @id @default(uuid())
+  description  String
+  status       String
+  priority     Int
+  agent        Agent    @relation(fields: [agentId], references: [id])
+  agentId      String
+  dependencies Task[]   @relation("TaskDependencies")
+  dependsOn    Task[]   @relation("TaskDependencies")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Workflow {
+  id        String   @id @default(uuid())
+  objective String
+  status    String
+  metadata  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Memory {
+  id        String   @id @default(uuid())
+  type      String
+  content   Json
+  metadata  Json
+  timestamp BigInt
+  agentId   String
+  agent     Agent    @relation(fields: [agentId], references: [id])
+  vectorId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Error {
+  id        String   @id @default(uuid())
+  code      String
+  message   String
+  context   Json
+  severity  String
+  timestamp BigInt
+  agentId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Metrics {
+  id             String   @id @default(uuid())
+  agentId        String
+  taskCount      Int
+  successRate    Float
+  avgTaskDuration Float
+  memoryUsage    Int
+  lastActive     BigInt
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  role      String
+  timestamp DateTime @default(now())
+  agentId   String
+  agent     Agent    @relation(fields: [agentId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

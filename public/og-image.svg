@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#000000"/>
+  <rect width="1200" height="630" fill="url(#gradient)" fill-opacity="0.1"/>
+  
+  <!-- Logo -->
+  <g transform="translate(100, 165) scale(0.6)">
+    <!-- Background Circle -->
+    <circle cx="256" cy="256" r="248" fill="none" stroke="#4F46E5" stroke-width="16"/>
+    
+    <!-- Dog Face -->
+    <path d="M256 140C180 140 140 200 140 256C140 312 180 372 256 372C332 372 372 312 372 256C372 200 332 140 256 140Z" fill="#4F46E5"/>
+    
+    <!-- Dog Ears -->
+    <path d="M160 200C160 200 140 160 120 160C100 160 80 180 80 200C80 220 100 240 120 240C140 240 160 220 160 200Z" fill="#4F46E5"/>
+    <path d="M352 200C352 200 372 160 392 160C412 160 432 180 432 200C432 220 412 240 392 240C372 240 352 220 352 200Z" fill="#4F46E5"/>
+    
+    <!-- Magnifying Glass -->
+    <circle cx="300" cy="236" r="40" stroke="white" stroke-width="12"/>
+    <path d="M330 266L380 316" stroke="white" stroke-width="12" stroke-linecap="round"/>
+    
+    <!-- Detective Hat -->
+    <path d="M176 160C176 160 216 140 256 140C296 140 336 160 336 160C336 160 316 120 256 120C196 120 176 160 176 160Z" fill="#4F46E5"/>
+    <rect x="216" y="120" width="80" height="20" fill="#4F46E5"/>
+    
+    <!-- Eyes -->
+    <circle cx="220" cy="236" r="12" fill="white"/>
+    <circle cx="300" cy="236" r="12" fill="white"/>
+    
+    <!-- Nose -->
+    <circle cx="256" cy="276" r="16" fill="white"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="460" y="260" fill="white" font-family="system-ui" font-weight="bold" font-size="72">
+    onchn.ai
+  </text>
+  <text x="460" y="340" fill="#A5B4FC" font-family="system-ui" font-size="36">
+    AI-Powered Solana Blockchain Detective
+  </text>
+  
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4F46E5"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+</svg> 

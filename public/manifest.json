@@ -1,0 +1,62 @@
+{
+  "name": "onchn.ai - AI-Powered Solana Blockchain Detective",
+  "short_name": "onchn.ai",
+  "description": "Advanced blockchain forensics and trading automation powered by AI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Wallet Analysis",
+      "short_name": "Wallets",
+      "description": "Analyze wallet behavior and patterns",
+      "url": "/wallet-analysis",
+      "icons": [{ "src": "/shortcuts/wallet.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Auto Trader",
+      "short_name": "Trade",
+      "description": "Automated trading with AI",
+      "url": "/auto-trader",
+      "icons": [{ "src": "/shortcuts/trade.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/wallet-analysis.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Wallet Analysis Dashboard"
+    },
+    {
+      "src": "/screenshots/auto-trader.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Auto Trader Interface"
+    }
+  ],
+  "categories": ["finance", "productivity", "utilities"],
+  "prefer_related_applications": false
+} 

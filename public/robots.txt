@@ -1,0 +1,15 @@
+# https://onchn.ai
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://onchn.ai/sitemap.xml
+
+# API endpoints
+Disallow: /api/
+
+# Auth pages
+Disallow: /auth/
+
+# Rate limit
+Crawl-delay: 1 

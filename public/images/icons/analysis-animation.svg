@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Chart Grid -->
+  <path
+    d="M20 108H108M20 20V108"
+    stroke="#4F46E5"
+    stroke-width="4"
+    stroke-linecap="round"
+  />
+  
+  <!-- Chart Lines -->
+  <path
+    d="M20 90L40 60L60 80L80 40L100 20"
+    stroke="#4F46E5"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+    stroke-dasharray="200"
+    stroke-dashoffset="200"
+  >
+    <animate
+      attributeName="stroke-dashoffset"
+      from="200"
+      to="0"
+      dur="2s"
+      repeatCount="indefinite"
+    />
+  </path>
+  
+  <!-- Data Points -->
+  <circle cx="40" cy="60" r="4" fill="#4F46E5">
+    <animate
+      attributeName="r"
+      values="4;6;4"
+      dur="1s"
+      repeatCount="indefinite"
+    />
+  </circle>
+  
+  <circle cx="60" cy="80" r="4" fill="#4F46E5">
+    <animate
+      attributeName="r"
+      values="4;6;4"
+      dur="1s"
+      begin="0.2s"
+      repeatCount="indefinite"
+    />
+  </circle>
+  
+  <circle cx="80" cy="40" r="4" fill="#4F46E5">
+    <animate
+      attributeName="r"
+      values="4;6;4"
+      dur="1s"
+      begin="0.4s"
+      repeatCount="indefinite"
+    />
+  </circle>
+  
+  <circle cx="100" cy="20" r="4" fill="#4F46E5">
+    <animate
+      attributeName="r"
+      values="4;6;4"
+      dur="1s"
+      begin="0.6s"
+      repeatCount="indefinite"
+    />
+  </circle>
+  
+  <!-- Scanning Line -->
+  <line
+    x1="20"
+    y1="20"
+    x2="108"
+    y2="20"
+    stroke="#4F46E5"
+    stroke-width="2"
+    opacity="0.3"
+  >
+    <animateTransform
+      attributeName="transform"
+      type="translate"
+      from="0 0"
+      to="0 88"
+      dur="2s"
+      repeatCount="indefinite"
+    />
+  </line>
+</svg> 

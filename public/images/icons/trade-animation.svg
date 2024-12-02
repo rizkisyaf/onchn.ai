@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle
+    cx="64"
+    cy="64"
+    r="60"
+    stroke="#4F46E5"
+    stroke-width="4"
+    fill="none"
+    opacity="0.2"
+  />
+  
+  <!-- Rotating Circle -->
+  <circle
+    cx="64"
+    cy="64"
+    r="50"
+    stroke="#4F46E5"
+    stroke-width="4"
+    fill="none"
+    stroke-dasharray="314"
+    stroke-dashoffset="314"
+  >
+    <animate
+      attributeName="stroke-dashoffset"
+      from="314"
+      to="0"
+      dur="3s"
+      repeatCount="indefinite"
+    />
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 64 64"
+      to="360 64 64"
+      dur="3s"
+      repeatCount="indefinite"
+    />
+  </circle>
+  
+  <!-- Up Arrow -->
+  <path
+    d="M64 20L74 35H54L64 20Z"
+    fill="#4F46E5"
+  >
+    <animate
+      attributeName="opacity"
+      values="1;0.5;1"
+      dur="1.5s"
+      repeatCount="indefinite"
+    />
+  </path>
+  
+  <!-- Down Arrow -->
+  <path
+    d="M64 108L74 93H54L64 108Z"
+    fill="#4F46E5"
+  >
+    <animate
+      attributeName="opacity"
+      values="0.5;1;0.5"
+      dur="1.5s"
+      repeatCount="indefinite"
+    />
+  </path>
+  
+  <!-- Trading Symbols -->
+  <g transform="translate(44, 54)">
+    <text
+      fill="#4F46E5"
+      font-family="monospace"
+      font-size="16"
+      font-weight="bold"
+    >
+      SOL
+      <animate
+        attributeName="opacity"
+        values="1;0.5;1"
+        dur="2s"
+        repeatCount="indefinite"
+      />
+    </text>
+  </g>
+  
+  <g transform="translate(44, 74)">
+    <text
+      fill="#4F46E5"
+      font-family="monospace"
+      font-size="16"
+      font-weight="bold"
+    >
+      USDC
+      <animate
+        attributeName="opacity"
+        values="0.5;1;0.5"
+        dur="2s"
+        repeatCount="indefinite"
+      />
+    </text>
+  </g>
+  
+  <!-- Pulse Effect -->
+  <circle
+    cx="64"
+    cy="64"
+    r="40"
+    stroke="#4F46E5"
+    stroke-width="4"
+    fill="none"
+    opacity="0"
+  >
+    <animate
+      attributeName="r"
+      from="40"
+      to="70"
+      dur="3s"
+      repeatCount="indefinite"
+    />
+    <animate
+      attributeName="opacity"
+      from="0.5"
+      to="0"
+      dur="3s"
+      repeatCount="indefinite"
+    />
+  </circle>
+</svg> 
