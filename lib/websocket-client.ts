@@ -52,9 +52,10 @@ export class WebSocketClient extends EventEmitter {
     this.ws.addEventListener('open', this.handleOpen)
     this.ws.addEventListener('message', this.handleMessage)
     this.ws.addEventListener('close', this.handleClose)
-    this.ws.addEventListener('error', (event: Event) => {
-      this.handleError(event as ErrorEvent);
-    });
+    // @ts-ignore
+    this.ws.addEventListener('error', ((event: Event) => {
+      this.handleError(event as ErrorEvent)
+    }) as EventListener)
   }
 
   disconnect() {
@@ -121,7 +122,7 @@ export class WebSocketClient extends EventEmitter {
     }
   }
 
-  private handleError = (event: ErrorEvent) => {
+  private handleError = (event: ErrorEvent): void => {
     const wsError: WebSocketErrorEvent = {
       originalEvent: event,
       wsError: event.error || new Error('Unknown WebSocket error'),
