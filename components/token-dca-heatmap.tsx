@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { detectDCAPattern } from '@/lib/dca-detection'
-import { DCAPattern } from '@/types/wallet'
+import { DCAPattern } from '@/types/dca'
 import { ResponsiveContainer, Scatter, ScatterChart, XAxis, YAxis, ZAxis, Tooltip } from 'recharts'
 
 interface TokenDCAHeatmapProps {
@@ -36,12 +36,12 @@ export function TokenDCAHeatmap({ tokenAddress }: TokenDCAHeatmapProps) {
           // Find existing data point or create new one
           const existingPoint = data.find(d => d.hour === hour && d.day === day)
           if (existingPoint) {
-            existingPoint.intensity += pattern.amount
+            existingPoint.intensity += pattern.amountPerOrder
           } else {
             data.push({
               hour,
               day,
-              intensity: pattern.amount
+              intensity: pattern.amountPerOrder
             })
           }
         })

@@ -113,3 +113,26 @@ export async function getWalletTransactions(walletAddress: string): Promise<any[
   }
 }
 
+export async function getTransactionHistory(walletAddress: string): Promise<WalletData['transactions']> {
+  try {
+    const response = await fetch(`${process.env.SOLANATRACKER_API_URL}/wallet/${walletAddress}/trades`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.SOLANATRACKER_API_KEY || '',
+      },
+    });
+
+    if (!response.ok) {
+      throw new APIErrorImpl('INTERNAL_ERROR', `Failed to fetch transaction history: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.trades;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      throw new APIErrorImpl('INTERNAL_ERROR', 'Invalid transaction data format');
+    }
+    throw error;
+  }
+}
+

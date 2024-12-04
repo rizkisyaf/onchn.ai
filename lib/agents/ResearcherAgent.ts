@@ -1,6 +1,6 @@
 import { OpenAI } from 'openai';
 import { PineconeClient } from '@pinecone-database/pinecone';
-import { AgentCapability, AgentTask } from '@/types/agent';
+import { AgentCapability, AgentHandler } from '../types/agent';
 import { MonitoringService } from '../services/monitoring';
 
 const openai = new OpenAI(process.env.OPENAI_API_KEY!);
@@ -31,7 +31,7 @@ export class ResearcherAgent {
           depth: 'number',
           sources: 'string[]',
         },
-        handler: this.researchTopic.bind(this),
+        handler: this.researchTopic.bind(this) as unknown as AgentHandler,
       },
       {
         name: 'analyze_data',
@@ -40,7 +40,7 @@ export class ResearcherAgent {
           data: 'any',
           analysisType: 'string',
         },
-        handler: this.analyzeData.bind(this),
+        handler: this.analyzeData.bind(this) as unknown as AgentHandler,
       },
       {
         name: 'verify_information',
@@ -49,7 +49,7 @@ export class ResearcherAgent {
           information: 'string',
           sources: 'string[]',
         },
-        handler: this.verifyInformation.bind(this),
+        handler: this.verifyInformation.bind(this) as unknown as AgentHandler,
       },
     ];
   }

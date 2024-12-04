@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { AgentService } from '@/lib/services/agent';
 import { getServerSession } from 'next-auth';
+import type { Memory } from '@prisma/client/edge';
 
 const agentService = new AgentService();
 
@@ -80,7 +81,7 @@ export async function GET(
       });
 
       // Sort memories based on vector search relevance
-      memories.sort((a, b) => {
+      memories.sort((a: Memory, b: Memory) => {
         if (!a.vectorId || !b.vectorId) return 0;
         const aIndex = vectorIds.indexOf(a.vectorId);
         const bIndex = vectorIds.indexOf(b.vectorId);

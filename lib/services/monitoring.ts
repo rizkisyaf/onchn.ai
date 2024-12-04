@@ -2,7 +2,8 @@ import { Redis } from 'ioredis';
 import { Gauge, Counter, Registry } from 'prom-client';
 import { Logger } from 'winston';
 import { createLogger, format, transports } from 'winston';
-import { AgentTask, AgentError } from '@/types/agent';
+import { AgentTask, AgentError } from '../types/agent';
+import { Prisma } from '@prisma/client';
 
 const redis = new Redis(process.env.REDIS_URL!);
 const registry = new Registry();
@@ -86,11 +87,15 @@ export class MonitoringService {
       // Log to Redis for error tracking
       const errorKey = `error:${agentId}:${Date.now()}`;
       const errorData: AgentError = {
+        id: crypto.randomUUID(),
         code: errorType,
         message: error.message,
-        context,
-        timestamp: Date.now(),
+        context: JSON.parse(JSON.stringify(context)) as Prisma.JsonValue,
+        timestamp: BigInt(Date.now()),
         severity: this.calculateErrorSeverity(error),
+        agentId: agentId,
+        createdAt: new Date(),
+        updatedAt: new Date()
       };
 
       redis.hmset(errorKey, errorData);
@@ -120,11 +125,16 @@ export class MonitoringService {
       keys.map(async (key) => redis.hgetall(key))
     );
 
+    const validTasks = tasks.filter(t => t.duration); // Filter out tasks without duration
+    const avgDuration = validTasks.length > 0 
+      ? validTasks.reduce((acc, t) => acc + Number(t.duration), 0) / validTasks.length 
+      : 0;
+
     return {
       total: tasks.length,
       completed: tasks.filter(t => t.status === 'completed').length,
       failed: tasks.filter(t => t.status === 'failed').length,
-      avgDuration: tasks.reduce((acc, t) => acc + Number(t.duration), 0) / tasks.length,
+      avgDuration
     };
   }
 
@@ -199,5 +209,9 @@ export class MonitoringService {
 
   logWarning(message: string, context: Record<string, unknown>) {
     logger.warn(message, context);
+  }
+
+  logInfo(message: string, context: Record<string, unknown>): void {
+    logger.info(message, context);
   }
 } 

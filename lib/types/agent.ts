@@ -34,6 +34,7 @@ export interface AgentTask {
   status: string;
   priority: number;
   agentId: string;
+  assignedTo: string;
   dependencies: string[];
   createdAt: Date;
   updatedAt: Date;
@@ -106,4 +107,15 @@ export interface Agent {
   };
   createdAt: Date;
   updatedAt: Date;
-} 
+}
+
+export interface AgentWorkflow {
+  id: string;
+  steps: {
+    description: string;
+    priority: number;
+    dependencies: string[];
+    assignedTo: string;
+  }[];
+  metadata: Record<string, unknown>;
+}

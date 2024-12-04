@@ -7,7 +7,7 @@ import {
   TaskCreateInput,
   AgentTask,
   AgentWorkflow
-} from '@/types/agent';
+} from '../types/agent';
 import { MonitoringService } from '../services/monitoring';
 import { PrismaClient, Prisma } from '@prisma/client';
 
@@ -56,16 +56,22 @@ export class OrchestratorAgent {
 
   private async initialize() {
     const capabilities = this.getCapabilities();
-    const agentData: AgentCreateInput = {
+    const agentData: Prisma.AgentCreateInput = {
       name: 'orchestrator',
       role: 'orchestrator',
       status: 'idle',
-      capabilities: JSON.stringify(capabilities) as Prisma.InputJsonValue,
+      capabilities: capabilities as unknown as Prisma.InputJsonValue,
+      tasks: {
+        create: [] // Initialize with empty tasks array
+      }
     };
 
     this.agent = await prisma.agent.upsert({
       where: { name: 'orchestrator' },
-      update: {},
+      update: {
+        status: 'idle',
+        capabilities: capabilities as unknown as Prisma.InputJsonValue,
+      },
       create: agentData,
       include: {
         tasks: true,

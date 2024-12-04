@@ -71,16 +71,6 @@ export interface AddressMetadata {
   }
 }
 
-export interface DCAPattern {
-  token: string
-  interval: number
-  amount: number
-  startDate: number | Date
-  endDate?: number | Date
-  consistency?: number
-  confidence?: number
-}
-
 export interface WalletState {
   transactionCount: number
   uniqueTokens: number

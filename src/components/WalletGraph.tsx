@@ -84,20 +84,20 @@ const WalletGraph: React.FC<WalletGraphProps> = ({ data }) => {
 
     // Add hover effects
     node
-      .on('mouseover', function(event, d: any) {
+      .on('mouseover', function (event, d: any) {
         d3.select(this).select('circle')
           .transition()
           .duration(200)
           .attr('r', d.id === 'main' ? 18 : 10);
-        
+
         setSelectedNode(d.id);
       })
-      .on('mouseout', function(event, d: any) {
+      .on('mouseout', function (event, d: any) {
         d3.select(this).select('circle')
           .transition()
           .duration(200)
           .attr('r', d.id === 'main' ? 15 : 8);
-        
+
         setSelectedNode(null);
       });
 
@@ -144,10 +144,10 @@ const WalletGraph: React.FC<WalletGraphProps> = ({ data }) => {
       <svg ref={svgRef} style={{ width: '100%', height: '100%' }}>
         <defs>
           <filter id="glow" height="300%" width="300%" x="-75%" y="-75%">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
             <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
         </defs>

@@ -3,6 +3,7 @@ import { NextApiRequest } from 'next';
 import { prisma } from '@/lib/prisma';
 import { AgentService } from '@/lib/services/agent';
 import { parse } from 'url';
+import type { Prisma } from '@prisma/client';
 
 const agentService = new AgentService();
 const wss = new Server({ noServer: true });
@@ -39,15 +40,15 @@ export default function handler(req: NextApiRequest, res: any) {
               agentId: sourceId as string,
               metadata: {
                 path: ['targetAgentId'],
-                equals: targetId,
-              },
+                equals: targetId
+              } as Prisma.JsonFilter,
             },
             {
               agentId: targetId as string,
               metadata: {
                 path: ['targetAgentId'],
-                equals: sourceId,
-              },
+                equals: sourceId
+              } as Prisma.JsonFilter,
             },
           ],
         },
@@ -67,17 +68,20 @@ export default function handler(req: NextApiRequest, res: any) {
       ws.on('message', async (data: string) => {
         try {
           const message = JSON.parse(data);
-          
+
           // Store message
           const storedMessage = await prisma.message.create({
             data: {
               content: message.content,
-              type: message.type,
+              role: 'user',
               agentId: sourceId as string,
               metadata: {
                 targetAgentId: targetId,
                 ...message.metadata,
-              },
+              } as Prisma.InputJsonValue,
+              timestamp: new Date(),
+              createdAt: new Date(),
+              updatedAt: new Date()
             },
           });
 
@@ -93,8 +97,11 @@ export default function handler(req: NextApiRequest, res: any) {
             agentId: targetId as string,
             content: message.content,
             type: message.type,
-            timestamp: Date.now(),
-            metadata: message.metadata,
+            role: 'user',
+            timestamp: new Date(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            metadata: message.metadata
           });
 
           // Send confirmation back to source

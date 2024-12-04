@@ -120,4 +120,6 @@ export class BehaviorModel {
       throw new Error('Invalid model format')
     }
   }
-} 
+}
+
+export type { WalletState }

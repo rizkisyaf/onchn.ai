@@ -3,6 +3,25 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import GoogleProvider from "next-auth/providers/google"
 import { prisma } from "@/lib/prisma"
 
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string
+      name: string | null | undefined
+      email: string | null | undefined
+      image: string | null | undefined
+      subscription: string | null | undefined
+    }
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string
+    subscription?: string | null
+  }
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {

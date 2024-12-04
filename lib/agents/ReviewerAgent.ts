@@ -1,6 +1,6 @@
 import { OpenAI } from 'openai';
 import { Anthropic } from '@anthropic-ai/sdk';
-import { AgentCapability } from '@/types/agent';
+import { AgentCapability, AgentHandler } from '../types/agent';
 import { MonitoringService } from '../services/monitoring';
 import { PineconeClient } from '@pinecone-database/pinecone';
 
@@ -35,7 +35,7 @@ export class ReviewerAgent {
           criteria: 'string[]',
           context: 'Record<string, unknown>',
         },
-        handler: this.reviewWork.bind(this),
+        handler: this.reviewWork.bind(this) as unknown as AgentHandler,
       },
       {
         name: 'provide_feedback',
@@ -44,7 +44,7 @@ export class ReviewerAgent {
           review: 'Record<string, unknown>',
           focusAreas: 'string[]',
         },
-        handler: this.provideFeedback.bind(this),
+        handler: this.provideFeedback.bind(this) as unknown as AgentHandler,
       },
       {
         name: 'validate_changes',
@@ -54,7 +54,7 @@ export class ReviewerAgent {
           updatedWork: 'Record<string, unknown>',
           feedback: 'Record<string, unknown>',
         },
-        handler: this.validateChanges.bind(this),
+        handler: this.validateChanges.bind(this) as unknown as AgentHandler,
       },
       {
         name: 'assess_quality',
@@ -63,7 +63,7 @@ export class ReviewerAgent {
           work: 'Record<string, unknown>',
           metrics: 'string[]',
         },
-        handler: this.assessQuality.bind(this),
+        handler: this.assessQuality.bind(this) as unknown as AgentHandler,
       },
     ];
   }

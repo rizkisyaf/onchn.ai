@@ -1,6 +1,6 @@
 import { OpenAI } from 'openai';
 import { Anthropic } from '@anthropic-ai/sdk';
-import { AgentCapability, AgentTask } from '@/types/agent';
+import { AgentCapability, AgentHandler, AgentTask } from '../types/agent';
 import { MonitoringService } from '../services/monitoring';
 import { PineconeClient } from '@pinecone-database/pinecone';
 
@@ -35,7 +35,7 @@ export class PlannerAgent {
           constraints: 'Record<string, unknown>',
           availableAgents: 'string[]',
         },
-        handler: this.createPlan.bind(this),
+        handler: this.createPlan.bind(this) as unknown as AgentHandler,
       },
       {
         name: 'optimize_plan',
@@ -44,7 +44,7 @@ export class PlannerAgent {
           plan: 'Record<string, unknown>',
           metrics: 'string[]',
         },
-        handler: this.optimizePlan.bind(this),
+        handler: this.optimizePlan.bind(this) as unknown as AgentHandler,
       },
       {
         name: 'monitor_execution',
@@ -53,7 +53,7 @@ export class PlannerAgent {
           planId: 'string',
           metrics: 'string[]',
         },
-        handler: this.monitorExecution.bind(this),
+        handler: this.monitorExecution.bind(this) as unknown as AgentHandler,
       },
       {
         name: 'handle_failure',
@@ -62,7 +62,7 @@ export class PlannerAgent {
           failure: 'Record<string, unknown>',
           context: 'Record<string, unknown>',
         },
-        handler: this.handleFailure.bind(this),
+        handler: this.handleFailure.bind(this) as unknown as AgentHandler,
       },
     ];
   }

@@ -1,4 +1,4 @@
-import { getWalletInfo, getWalletTrades } from './api-client';
+import { getWalletInfo, getWalletData } from './api-client';
 
 export class RealTimeUpdates {
   private pollingInterval: number;
@@ -27,7 +27,7 @@ export class RealTimeUpdates {
   private async fetchData() {
     try {
       const walletInfo = await getWalletInfo(this.walletAddress);
-      const trades = await getWalletTrades(this.walletAddress);
+      const trades = await getWalletData(this.walletAddress);
       this.callback({ walletInfo, trades });
     } catch (error) {
       console.error('Error fetching real-time data:', error);

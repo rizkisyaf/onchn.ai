@@ -121,6 +121,7 @@ export class AgentService {
       status: 'pending',
       createdAt: new Date(),
       updatedAt: new Date(),
+      assignedTo: agentId,
     };
 
     await taskQueue.add(fullTask.id, fullTask);

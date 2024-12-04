@@ -1,6 +1,6 @@
 import { OpenAI } from 'openai';
 import { Anthropic } from '@anthropic-ai/sdk';
-import { AgentCapability } from '@/types/agent';
+import { AgentCapability, AgentHandler } from '../types/agent';
 import { MonitoringService } from '../services/monitoring';
 import { exec } from 'child_process';
 import { promisify } from 'util';
@@ -23,7 +23,7 @@ export class CoderAgent {
           language: 'string',
           requirements: 'string[]',
         },
-        handler: this.writeCode.bind(this),
+        handler: this.writeCode.bind(this) as unknown as AgentHandler,
       },
       {
         name: 'review_code',
@@ -33,7 +33,7 @@ export class CoderAgent {
           language: 'string',
           focus: 'string[]',
         },
-        handler: this.reviewCode.bind(this),
+        handler: this.reviewCode.bind(this) as unknown as AgentHandler,
       },
       {
         name: 'debug_code',
@@ -43,7 +43,7 @@ export class CoderAgent {
           error: 'string',
           context: 'Record<string, unknown>',
         },
-        handler: this.debugCode.bind(this),
+        handler: this.debugCode.bind(this) as unknown as AgentHandler,
       },
       {
         name: 'optimize_code',
@@ -52,7 +52,7 @@ export class CoderAgent {
           code: 'string',
           metrics: 'string[]',
         },
-        handler: this.optimizeCode.bind(this),
+        handler: this.optimizeCode.bind(this) as unknown as AgentHandler,
       },
       {
         name: 'test_code',
@@ -61,7 +61,7 @@ export class CoderAgent {
           code: 'string',
           testType: 'string[]',
         },
-        handler: this.testCode.bind(this),
+        handler: this.testCode.bind(this) as unknown as AgentHandler,
       },
     ];
   }

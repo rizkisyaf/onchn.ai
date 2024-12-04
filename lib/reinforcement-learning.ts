@@ -27,7 +27,7 @@ export class ReinforcementLearningModel {
     const targetQValues = qValues.clone();
     const nextQValuesMax = nextQValues.max(1);
 
-    const targetMask = tf.oneHot(actionTensor, qValues.shape[1]);
+    const targetMask = tf.oneHot(actionTensor, qValues.shape[1] as number);
     const targetValues = rewardTensor.add(nextQValuesMax.mul(0.99));
     targetQValues.mul(targetMask.logicalNot()).add(targetValues.mul(targetMask));
 

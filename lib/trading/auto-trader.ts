@@ -1,4 +1,4 @@
-import { ConfirmedSignatureInfo, Connection, ParsedAccountData, PublicKey } from '@solana/web3.js'
+import { AccountInfo, ConfirmedSignatureInfo, Connection, ParsedAccountData, PublicKey, TransactionResponse } from '@solana/web3.js'
 import { JupiterClient } from './jupiter-client'
 import { BehaviorModel, WalletState, TradeAction } from '../ai/behavior-model'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
@@ -122,9 +122,9 @@ export class AutoTrader {
       totalInflow: await this.calculateTotalInflow(transactions),
       totalOutflow: await this.calculateTotalOutflow(transactions),
       lastActivity: transactions[0].blockTime! * 1000,
-      tokens: await this.getTokenDetails(tokenAccounts),
+      tokens: await this.getTokenDetails(tokenAccounts.value),
       stats: {
-        totalValue: await this.calculateTotalValue(tokenAccounts),
+        totalValue: await this.calculateTotalValue(tokenAccounts.value),
         totalTransactions: transactions.length,
         uniqueTokens: tokenAccounts.value.length,
         avgTransactionValue: await this.calculateAvgTransactionValue(transactions),
@@ -181,26 +181,39 @@ export class AutoTrader {
     return txDetails.reduce((sum, tx) => sum + (tx?.meta?.postBalances[0] || 0), 0)
   }
 
-  private async getTokenDetails(tokenAccounts: ParsedAccountData[]): Promise<Token[]> {
+  private async getTokenDetails(tokenAccounts: { pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }[]): Promise<Token[]> {
     return Promise.all(
-      tokenAccounts.map(async account => {
-        const mintInfo = await this.connection.getParsedAccountInfo(account.data.parsed.info.mint)
+      tokenAccounts.map(async ({ account }) => {
+        const parsedInfo = (account.data as ParsedAccountData).parsed.info;
+        const mintInfo = await this.connection.getParsedAccountInfo(new PublicKey(parsedInfo.mint));
+        const mintData = (mintInfo.value?.data as ParsedAccountData)?.parsed?.info;
+        
         return {
-          address: account.data.parsed.info.mint,
-          symbol: mintInfo.value?.data.parsed.info.symbol || 'UNKNOWN',
-          name: mintInfo.value?.data.parsed.info.name || 'Unknown Token',
-          decimals: account.data.parsed.info.tokenAmount.decimals,
-          balance: Number(account.data.parsed.info.tokenAmount.amount),
-          value: 0, // To be calculated with price feed
-          price: 0, // To be fetched from price feed
-          change24h: 0 // To be fetched from price feed
-        }
+          address: parsedInfo.mint,
+          symbol: mintData?.symbol || 'UNKNOWN',
+          name: mintData?.name || 'Unknown Token',
+          decimals: parsedInfo.tokenAmount.decimals,
+          balance: Number(parsedInfo.tokenAmount.amount),
+          value: 0,
+          price: 0,
+          change24h: 0
+        };
       })
-    )
+    );
   }
 
-  private async calculateTotalValue(tokenAccounts: ParsedAccountData[]): Promise<number> {
+  private async calculateTotalValue(tokenAccounts: { pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }[]): Promise<number> {
     const tokens = await this.getTokenDetails(tokenAccounts)
     return tokens.reduce((sum, token) => sum + token.value, 0)
+  }
+
+  private calculateVolatility(txDetails: (TransactionResponse | null)[]): number {
+    const validTxs = txDetails.filter((tx): tx is TransactionResponse => tx !== null);
+    if (validTxs.length < 2) return 0;
+    
+    const values = validTxs.map(tx => tx.meta?.preBalances[0] || 0);
+    const mean = values.reduce((a, b) => a + b, 0) / values.length;
+    const variance = values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length;
+    return Math.sqrt(variance) / mean;
   }
 } 

@@ -38,7 +38,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session
       await prisma.user.update({
-        where: { id: session.client_reference_id },
+        where: { id: session.client_reference_id as string },
         data: {
           subscriptionTier: session.metadata?.tier,
         },
