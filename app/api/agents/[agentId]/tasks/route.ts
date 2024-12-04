@@ -34,6 +34,7 @@ export async function POST(
         priority: task.priority,
         status: task.status,
         agentId: task.agentId,
+        assignedTo: task.agentId,
         dependencies: {
           connect: dependencies?.map((id: string) => ({ id })) || [],
         },

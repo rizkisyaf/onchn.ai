@@ -30,7 +30,7 @@ export function useSubscription() {
   // In development, use the DEV_SUBSCRIPTION_TIER
   const tier = process.env.NODE_ENV === 'development' 
     ? DEV_SUBSCRIPTION_TIER 
-    : (session?.user?.subscriptionTier || 'free') as SubscriptionTier;
+    : (session?.user?.subscription || 'free') as SubscriptionTier;
 
   const currentPlan = {
     id: tier,

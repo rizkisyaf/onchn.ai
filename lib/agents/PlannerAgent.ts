@@ -148,8 +148,9 @@ export class PlannerAgent {
         assignedTo: 'planner',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        agentId: 'planner',
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -179,12 +180,15 @@ export class PlannerAgent {
     const startTime = Date.now();
 
     try {
+      // Type assertion for metrics
+      const metricsArray = Array.isArray(metrics) ? metrics : [];
+
       // Analyze current plan efficiency
       const analysisResponse = await openai.chat.completions.create({
         model: 'gpt-4-turbo-preview',
         messages: [{
           role: 'system',
-          content: `Analyze this plan's efficiency focusing on: ${metrics.join(', ')}`,
+          content: `Analyze this plan's efficiency focusing on: ${metricsArray.join(', ')}`,
         }, {
           role: 'user',
           content: JSON.stringify(plan),
@@ -238,8 +242,9 @@ export class PlannerAgent {
         assignedTo: 'planner',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        agentId: 'planner',
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -301,8 +306,9 @@ export class PlannerAgent {
         assignedTo: 'planner',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        agentId: 'planner',
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -385,8 +391,9 @@ export class PlannerAgent {
         assignedTo: 'planner',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        agentId: 'planner',
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {

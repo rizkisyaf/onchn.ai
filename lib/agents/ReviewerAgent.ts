@@ -70,6 +70,7 @@ export class ReviewerAgent {
 
   private async reviewWork(params: Record<string, unknown>): Promise<unknown> {
     const { work, criteria = [], context } = params;
+    const criteriaArray = Array.isArray(criteria) ? criteria : [];
     const startTime = Date.now();
 
     try {
@@ -138,8 +139,9 @@ export class ReviewerAgent {
         assignedTo: 'reviewer',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        agentId: 'reviewer',
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -148,7 +150,7 @@ export class ReviewerAgent {
         improvements,
         metadata: {
           duration,
-          criteriaEvaluated: criteria.length,
+          criteriaEvaluated: criteriaArray.length,
           similarReviewsFound: similarReviews.length,
         },
       };
@@ -225,8 +227,9 @@ export class ReviewerAgent {
         assignedTo: 'reviewer',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        agentId: 'reviewer',
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -312,8 +315,9 @@ export class ReviewerAgent {
         assignedTo: 'reviewer',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        agentId: 'reviewer',
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -339,6 +343,7 @@ export class ReviewerAgent {
 
   private async assessQuality(params: Record<string, unknown>): Promise<unknown> {
     const { work, metrics = [] } = params;
+    const metricsArray = Array.isArray(metrics) ? metrics : [];
     const startTime = Date.now();
 
     try {
@@ -400,8 +405,9 @@ export class ReviewerAgent {
         assignedTo: 'reviewer',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        agentId: 'reviewer',
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -410,7 +416,7 @@ export class ReviewerAgent {
         report,
         metadata: {
           duration,
-          metricsEvaluated: metrics.length,
+          metricsEvaluated: metricsArray.length,
           overallScore: scores.overall,
         },
       };
@@ -433,7 +439,7 @@ export class ReviewerAgent {
   }
 
   private async searchVectorDB(vector: number[]) {
-    const index = this.pinecone.Index('review-data');
+    const index = this.pinecone.index('review-data');
     const results = await index.query({
       vector,
       topK: 5,

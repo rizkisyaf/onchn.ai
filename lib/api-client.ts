@@ -18,13 +18,50 @@ export class APIErrorImpl extends Error implements APIError {
 }
 
 export const WalletDataSchema = z.object({
-  transactionCount: z.number(),
-  uniqueTokens: z.number(),
+  address: z.string(),
+  wallet: z.string(),
+  value: z.number(),
+  balance: z.number(),
+  tokens: z.array(z.object({
+    address: z.string(),
+    symbol: z.string(),
+    name: z.string(),
+    decimals: z.number(),
+    balance: z.number(),
+    value: z.number(),
+    price: z.number(),
+    change24h: z.number()
+  })),
+  transactions: z.array(z.object({
+    hash: z.string(),
+    timestamp: z.number(),
+    type: z.enum(['swap', 'transfer', 'stake', 'unstake', 'other']),
+    amount: z.number(),
+    value: z.number(),
+    source: z.string(),
+    target: z.string(),
+    from: z.string(),
+    to: z.string(),
+    fee: z.number(),
+    success: z.boolean(),
+    programId: z.string().optional(),
+    data: z.any().optional()
+  })),
+  stats: z.object({
+    totalValue: z.number(),
+    totalTransactions: z.number(),
+    uniqueTokens: z.number(),
+    avgTransactionValue: z.number(),
+    lastActivity: z.number()
+  }),
   avgTransactionValue: z.number(),
-  tradeFrequency: z.number(),
-  profitRatio: z.number(),
-  riskLevel: z.number(),
-  timeInMarket: z.number(),
+  totalInflow: z.number(),
+  totalOutflow: z.number(),
+  uniqueInteractions: z.number(),
+  dcaFrequency: z.number(),
+  avgDcaAmount: z.number(),
+  winRate: z.number(),
+  pnl: z.number()
 })
 
 export type WalletData = z.infer<typeof WalletDataSchema>

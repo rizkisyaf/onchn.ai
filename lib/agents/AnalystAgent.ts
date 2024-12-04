@@ -70,17 +70,20 @@ export class AnalystAgent {
   }
 
   private async initialize() {
+    const capabilities = this.getCapabilities();
     const agentData: AgentCreateInput = {
       name: 'analyst',
       role: 'analyst',
       status: 'idle',
-      capabilities: JSON.stringify(this.getCapabilities()),
+      capabilities: JSON.stringify(capabilities) as Prisma.InputJsonValue,
     };
-
+  
     const result = await prisma.$transaction(async (tx) => {
       const agent = await tx.agent.upsert({
         where: { name: 'analyst' },
-        update: {},
+        update: {
+          capabilities: JSON.stringify(capabilities) as Prisma.InputJsonValue,
+        },
         create: agentData,
         include: {
           tasks: true,
@@ -88,7 +91,7 @@ export class AnalystAgent {
       });
       return agent;
     });
-
+  
     this.agent = result;
   }
 

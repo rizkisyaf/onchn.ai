@@ -3,7 +3,7 @@ import { OpenAI } from 'openai';
 import { Anthropic } from '@anthropic-ai/sdk';
 import Redis from 'ioredis';
 import { Queue, Worker } from 'bullmq';
-import { Agent, AgentTask, AgentMessage } from '@/types/agent';
+import { Agent, AgentTask, AgentMessage } from '../types/agent';
 
 const openai = new OpenAI(process.env.OPENAI_API_KEY!);
 const anthropic = new Anthropic({
@@ -37,7 +37,7 @@ export class AgentService {
     // Task worker
     new Worker('agent-tasks', async (job) => {
       const task = job.data as AgentTask;
-      const agent = this.agents.get(task.assignedTo!);
+      const agent = this.agents.get(task.agentId);
       
       if (!agent) throw new Error('Agent not found');
       
@@ -86,12 +86,15 @@ export class AgentService {
       name: agentData.name || 'Agent',
       role: agentData.role || 'assistant',
       capabilities: agentData.capabilities || [],
+      tasks: [],
       memory: {
         shortTerm: {},
         longTerm: {},
         episodic: [],
       },
       status: 'idle',
+      createdAt: new Date(),
+      updatedAt: new Date(),
       ...agentData,
     };
 
@@ -114,10 +117,10 @@ export class AgentService {
       description: task.description || '',
       priority: task.priority || 1,
       dependencies: task.dependencies || [],
-      assignedTo: agentId,
+      agentId: agentId,
       status: 'pending',
-      created: Date.now(),
-      updated: Date.now(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     await taskQueue.add(fullTask.id, fullTask);
@@ -198,7 +201,7 @@ export class AgentService {
   }
 
   private async searchVectorDB(vector: number[]) {
-    const index = this.pinecone.Index('agent-memory');
+    const index = this.pinecone.index('agent-memory');
     const results = await index.query({
       vector,
       topK: 5,
@@ -209,27 +212,26 @@ export class AgentService {
 
   async storeMemory(agentId: string, memory: { type: string; content: any }) {
     const embedding = await this.getEmbeddings(JSON.stringify(memory.content));
-    const index = this.pinecone.Index('agent-memory');
+    const index = this.pinecone.index('agent-memory');
     const vectorId = `${agentId}-${Date.now()}`;
 
-    await index.upsert([{
-      id: vectorId,
-      values: embedding,
-      metadata: memory,
-    }]);
+    await index.upsert({
+      vectors: [{
+        id: vectorId,
+        values: embedding,
+        metadata: memory,
+      }]
+    });
 
     return vectorId;
   }
 
   async searchMemory(agentId: string, query: string) {
     const embedding = await this.getEmbeddings(query);
-    const index = this.pinecone.Index('agent-memory');
+    const index = this.pinecone.index('agent-memory');
     const results = await index.query({
       vector: embedding,
       topK: 5,
-      filter: {
-        agentId,
-      },
       includeMetadata: true,
     });
     return results.matches;
@@ -241,7 +243,7 @@ export class AgentService {
 
     // Update episodic memory
     agent.memory.episodic.push({
-      timestamp: Date.now(),
+      timestamp: new Date(),
       action: event.action,
       context: event.context,
     });
@@ -305,8 +307,11 @@ export class AgentService {
       id: crypto.randomUUID(),
       agentId: message.agentId,
       content: response.content[0].text,
+      role: 'assistant',
       type: 'text',
-      timestamp: Date.now(),
+      timestamp: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
     });
   }
 
@@ -327,8 +332,11 @@ export class AgentService {
       id: crypto.randomUUID(),
       agentId: message.agentId,
       content: response.choices[0].message.content!,
+      role: 'assistant',
       type: 'code',
-      timestamp: Date.now(),
+      timestamp: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
     });
   }
 
@@ -353,4 +361,6 @@ export class AgentService {
       },
     });
   }
+
+
 } 

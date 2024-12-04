@@ -43,6 +43,8 @@ export interface AgentMessage {
   id: string;
   content: string;
   role: string;
+  type?: string;
+  metadata?: Record<string, unknown>;
   timestamp: Date;
   agentId: string;
   createdAt: Date;
@@ -91,6 +93,17 @@ export interface Agent {
   status: string;
   capabilities: Prisma.JsonValue;
   tasks: AgentTask[];
+  memory: {
+    shortTerm: Record<string, unknown>;
+    longTerm: Record<string, unknown>;
+    episodic: Array<Record<string, unknown>>;
+  };
+  currentTask?: {
+    id: string;
+    description: string;
+    startTime: number;
+    progress: number;
+  };
   createdAt: Date;
   updatedAt: Date;
 } 

@@ -1,5 +1,5 @@
 import { PublicKey, Connection } from '@solana/web3.js'
-import { Trade, WalletData } from '@/types/trade'
+import { Trade } from '@/types/trade'
 
 // Import existing behavior analysis functions
 import { calculateRiskScore, determineTradingStyle } from '@/hooks/use-behavior-analysis'

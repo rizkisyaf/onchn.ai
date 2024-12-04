@@ -97,7 +97,7 @@ export class ResearcherAgent {
         return {
           question,
           analysis: analysisResponse.choices[0].message.content,
-          sources: searchResults.map((r) => r.metadata.source),
+          sources: searchResults.map((r: any) => r.metadata.source),
         };
       });
 
@@ -123,8 +123,9 @@ export class ResearcherAgent {
         assignedTo: 'researcher',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        agentId: 'researcher',
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -182,8 +183,9 @@ export class ResearcherAgent {
         assignedTo: 'researcher',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        agentId: 'researcher',
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -215,7 +217,8 @@ export class ResearcherAgent {
       const facts = await this.searchVectorDB(embedding);
 
       // Verify against each source
-      const verificationPromises = sources.map(async (source) => {
+      const sourcesArray = Array.isArray(sources) ? sources : [];
+      const verificationPromises = sourcesArray.map(async (source: string) => {
         const sourceResponse = await openai.chat.completions.create({
           model: 'gpt-4-turbo-preview',
           messages: [{
@@ -259,8 +262,9 @@ export class ResearcherAgent {
         assignedTo: 'researcher',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        agentId: 'researcher',
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -268,7 +272,7 @@ export class ResearcherAgent {
         details: verificationResults,
         metadata: {
           duration,
-          sourcesChecked: sources.length,
+          sourcesChecked: sourcesArray.length,
           factsFound: facts.length,
         },
       };
@@ -291,7 +295,7 @@ export class ResearcherAgent {
   }
 
   private async searchVectorDB(vector: number[]) {
-    const index = this.pinecone.Index('research-data');
+    const index = this.pinecone.index('research-data');
     const results = await index.query({
       vector,
       topK: 5,

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     default: 'onchn.ai - AI-Powered Solana Blockchain Detective',
     template: '%s | onchn.ai',
   },
-  description: 'Advanced blockchain forensics and trading automation powered by AI. Track wallets, analyze behavior patterns, and automate trading with confidence.',
+  description: 'is it  Track wallets, analyze behavior patterns, and automate trading with confidence.',
   keywords: [
     'blockchain forensics',
     'solana',

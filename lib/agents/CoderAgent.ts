@@ -4,8 +4,6 @@ import { AgentCapability } from '@/types/agent';
 import { MonitoringService } from '../services/monitoring';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import * as fs from 'fs/promises';
-import * as path from 'path';
 
 const execAsync = promisify(exec);
 const openai = new OpenAI(process.env.OPENAI_API_KEY!);
@@ -143,10 +141,11 @@ export class CoderAgent {
         description: `Write code: ${description}`,
         status: 'completed',
         assignedTo: 'coder',
+        agentId: 'coder',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -170,7 +169,7 @@ export class CoderAgent {
   }
 
   private async reviewCode(params: Record<string, unknown>): Promise<unknown> {
-    const { code, language, focus = [] } = params;
+    const { code, language, focus = [] } = params as { code: string; language: string; focus: string[] };
     const startTime = Date.now();
 
     try {
@@ -199,13 +198,14 @@ export class CoderAgent {
       const duration = (Date.now() - startTime) / 1000;
       monitoring.trackTask({
         id: 'review-code-task',
-        description: `Review code`,
+        description: `Review ${language} code`,
         status: 'completed',
         assignedTo: 'coder',
+        agentId: 'coder',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -298,10 +298,11 @@ export class CoderAgent {
         description: `Debug code error`,
         status: 'completed',
         assignedTo: 'coder',
+        agentId: 'coder',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -323,7 +324,7 @@ export class CoderAgent {
   }
 
   private async optimizeCode(params: Record<string, unknown>): Promise<unknown> {
-    const { code, metrics = [] } = params;
+    const { code, metrics = [] } = params as { code: string; metrics: string[] };
     const startTime = Date.now();
 
     try {
@@ -362,13 +363,14 @@ export class CoderAgent {
       const duration = (Date.now() - startTime) / 1000;
       monitoring.trackTask({
         id: 'optimize-code-task',
-        description: `Optimize code`,
+        description: `Optimize code for ${metrics.join(', ')}`,
         status: 'completed',
         assignedTo: 'coder',
+        agentId: 'coder',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {
@@ -390,7 +392,7 @@ export class CoderAgent {
   }
 
   private async testCode(params: Record<string, unknown>): Promise<unknown> {
-    const { code, testType = [] } = params;
+    const { code, testType = [] } = params as { code: string; testType: string[] };
     const startTime = Date.now();
 
     try {
@@ -430,13 +432,14 @@ export class CoderAgent {
       const duration = (Date.now() - startTime) / 1000;
       monitoring.trackTask({
         id: 'test-code-task',
-        description: `Test code`,
+        description: `Run tests: ${testType.join(', ')}`,
         status: 'completed',
         assignedTo: 'coder',
+        agentId: 'coder',
         priority: 1,
         dependencies: [],
-        created: startTime,
-        updated: Date.now(),
+        createdAt: new Date(startTime),
+        updatedAt: new Date(Date.now()),
       }, duration);
 
       return {

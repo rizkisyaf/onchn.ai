@@ -44,7 +44,7 @@ interface FailureParams extends AgentParams {
 }
 
 export class OrchestratorAgent {
-  private agent: Prisma.AgentGetPayload<{
+  private agent!: Prisma.AgentGetPayload<{
     include: {
       tasks: true;
     }
@@ -55,11 +55,12 @@ export class OrchestratorAgent {
   }
 
   private async initialize() {
+    const capabilities = this.getCapabilities();
     const agentData: AgentCreateInput = {
       name: 'orchestrator',
       role: 'orchestrator',
       status: 'idle',
-      capabilities: this.getCapabilities() as unknown as Prisma.JsonValue,
+      capabilities: JSON.stringify(capabilities) as Prisma.InputJsonValue,
     };
 
     this.agent = await prisma.agent.upsert({
@@ -152,14 +153,15 @@ export class OrchestratorAgent {
       const tasks = await prisma.$transaction(async (tx) => {
         return Promise.all(
           workflowPlan.steps.map(async (step: any) => {
-            const taskData: TaskCreateInput = {
+            const taskData: Prisma.TaskCreateInput = {
               description: step.description,
               status: 'pending',
               priority: step.priority,
-              agent: { connect: { id: this.agent.id } },
-              dependencies: {
-                connect: step.dependencies.map((id: string) => ({ id })),
+              agent: {
+                connect: { id: this.agent.id }
               },
+              assignedTo: 'orchestrator',
+              dependencies: step.dependencies,
             };
             return tx.task.create({ data: taskData });
           })
@@ -174,6 +176,7 @@ export class OrchestratorAgent {
         priority: 1,
         dependencies: [],
         agentId: this.agent.id,
+        assignedTo: 'orchestrator',
         createdAt: new Date(startTime),
         updatedAt: new Date(),
       };
@@ -231,7 +234,7 @@ export class OrchestratorAgent {
           where: { id: task.id },
           data: {
             status: 'completed',
-            result: result as Prisma.JsonValue,
+            metadata: result as Prisma.InputJsonValue,
           },
         });
       }
@@ -244,6 +247,7 @@ export class OrchestratorAgent {
         priority: 1,
         dependencies: [],
         agentId: this.agent.id,
+        assignedTo: 'orchestrator',
         createdAt: new Date(startTime),
         updatedAt: new Date(),
       };
@@ -316,6 +320,7 @@ export class OrchestratorAgent {
         priority: 1,
         dependencies: [],
         agentId: this.agent.id,
+        assignedTo: 'orchestrator',
         createdAt: new Date(startTime),
         updatedAt: new Date(),
       };
@@ -394,6 +399,7 @@ export class OrchestratorAgent {
         priority: 1,
         dependencies: [],
         agentId: this.agent.id,
+        assignedTo: 'orchestrator',
         createdAt: new Date(startTime),
         updatedAt: new Date(),
       };
@@ -467,6 +473,7 @@ export class OrchestratorAgent {
         priority: 1,
         dependencies: [],
         agentId: this.agent.id,
+        assignedTo: 'orchestrator',
         createdAt: new Date(startTime),
         updatedAt: new Date(),
       };

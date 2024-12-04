@@ -28,6 +28,8 @@ model Task {
   priority     Int
   agent        Agent    @relation(fields: [agentId], references: [id])
   agentId      String
+  assignedTo   String
+  metadata     Json?
   dependencies Task[]   @relation("TaskDependencies")
   dependsOn    Task[]   @relation("TaskDependencies")
   createdAt    DateTime @default(now())

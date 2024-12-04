@@ -1,26 +1,5 @@
-import { Token } from '@/types/wallet'
 import * as tf from '@tensorflow/tfjs'
-
-export interface WalletState {
-  transactionCount: number
-  uniqueTokens: number
-  avgTransactionValue: number
-  tradeFrequency: number
-  profitRatio: number
-  riskLevel: number
-  timeInMarket: number
-  totalInflow: number
-  totalOutflow: number
-  lastActivity: number
-  tokens: Token[]
-  stats: {
-    totalValue: number
-    totalTransactions: number
-    uniqueTokens: number
-    avgTransactionValue: number
-    lastActivity: number
-  }
-}
+import { WalletState } from '@/types/wallet'
 
 export interface TradeAction {
   type: 'buy' | 'sell' | 'hold'

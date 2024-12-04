@@ -64,9 +64,9 @@ export type AddressType = 'pda' | 'alt' | 'wallet' | 'program' | 'unknown'
 export interface AddressMetadata {
   type: AddressType
   program?: string
-  risk: {
-    score: number
-    level: 'low' | 'medium' | 'high'
+  risk?: {
+    score?: number
+    level: 'high' | 'medium' | 'low'
     reason: string
   }
 }

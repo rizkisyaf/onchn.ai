@@ -4,14 +4,3 @@ export interface Trade {
   token: string
   timestamp: number
 }
-
-export interface WalletData {
-  avgTransactionValue: number
-  stats: {
-    totalTransactions: number
-    lastActivity: number
-  }
-  tokens: string[]
-  totalInflow: number
-  totalOutflow: number
-} 

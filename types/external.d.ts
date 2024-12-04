@@ -19,6 +19,16 @@ declare module 'openai' {
         }>;
       };
     };
+    embeddings: {
+      create(params: {
+        model: string;
+        input: string;
+      }): Promise<{
+        data: Array<{
+          embedding: number[];
+        }>;
+      }>;
+    };
   }
 }
 

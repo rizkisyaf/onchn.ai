@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { AgentService } from '@/lib/services/agent';
 import { getServerSession } from 'next-auth';
+import { Prisma } from '@prisma/client';
 
 const agentService = new AgentService();
 
@@ -28,7 +29,9 @@ export async function POST(req: Request) {
         name: agent.name,
         role: agent.role,
         status: agent.status,
-        capabilities: agent.capabilities,
+        capabilities: agent.capabilities as Prisma.InputJsonValue,
+        createdAt: agent.createdAt,
+        updatedAt: agent.updatedAt,
       },
     });
 
