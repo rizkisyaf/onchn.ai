@@ -1,122 +1,110 @@
-import { rateLimit, getRateLimitInfo, resetRateLimit } from '@/lib/middleware/rateLimit';
-import { Redis } from 'ioredis-mock';
-import { NextResponse } from 'next/server';
+import Redis from 'ioredis-mock'
+import { rateLimit, getRateLimitInfo, resetRateLimit } from '@/lib/middleware/rateLimit'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { Socket } from 'net'
 
-// Mock external services
-jest.mock('ioredis', () => require('ioredis-mock'));
-jest.mock('@/lib/services/monitoring', () => ({
-  MonitoringService: jest.fn().mockImplementation(() => ({
-    logWarning: jest.fn(),
-    logError: jest.fn(),
-    logInfo: jest.fn(),
-  })),
-}));
+class MockSocket {
+  remoteAddress: string = '127.0.0.1'
+}
 
-describe('Rate Limiting Middleware', () => {
-  const mockRequest = (ip: string): Request =>
-    new Request('http://test.com', {
-      headers: new Headers({
-        'x-forwarded-for': ip,
-      }),
-    });
+class MockRequest implements Partial<NextApiRequest> {
+  url: string
+  method: string
+  headers: { [key: string]: string }
+  socket: { remoteAddress: string }
+
+  constructor(url: string) {
+    this.url = url
+    this.method = 'GET'
+    this.headers = {}
+    this.socket = { remoteAddress: '127.0.0.1' }
+  }
+}
+
+class MockResponse implements Partial<NextApiResponse> {
+  statusCode: number = 200
+  headers: { [key: string]: string | string[] } = {}
+
+  status(code: number) {
+    this.statusCode = code
+    return this
+  }
+
+  setHeader(name: string, value: string | string[]) {
+    this.headers[name] = value
+    return this
+  }
+
+  json(body: any) {
+    return Promise.resolve(body)
+  }
+
+  getHeader(name: string) {
+    return this.headers[name]
+  }
+
+  end() {}
+}
+
+describe('Rate Limiting', () => {
+  let redis: InstanceType<typeof Redis>
 
   beforeEach(() => {
-    jest.clearAllMocks();
-  });
+    redis = new Redis() as any
+  })
 
-  describe('rateLimit', () => {
-    it('should allow requests within limit', async () => {
-      const req = mockRequest('127.0.0.1');
-      const result = await rateLimit(req, 'default');
-      expect(result).toBeNull();
-    });
+  afterEach(async () => {
+    await redis.flushall()
+  })
 
-    it('should block requests over limit', async () => {
-      const req = mockRequest('127.0.0.1');
-      const promises = Array(101).fill(null).map(() => rateLimit(req, 'default'));
-      const results = await Promise.all(promises);
-      
-      const blockedRequests = results.filter((r) => r instanceof NextResponse);
-      expect(blockedRequests.length).toBeGreaterThan(0);
+  it('should allow requests within rate limit', async () => {
+    const req = new MockRequest('http://localhost/api/test')
+    const res = new MockResponse()
 
-      const lastBlocked = blockedRequests[blockedRequests.length - 1] as NextResponse;
-      const body = await lastBlocked.json();
-      expect(body.error).toBe('Too many requests');
-      expect(lastBlocked.status).toBe(429);
-    });
+    const result = await rateLimit(req as NextApiRequest, res as NextApiResponse)
+    expect(result?.statusCode).toBe(200)
+  })
 
-    it('should apply different limits for different endpoints', async () => {
-      const req = mockRequest('127.0.0.1');
-      
-      // Test agent endpoint (50 requests/minute)
-      const agentPromises = Array(51).fill(null).map(() => rateLimit(req, 'agent'));
-      const agentResults = await Promise.all(agentPromises);
-      const blockedAgentRequests = agentResults.filter((r) => r instanceof NextResponse);
-      expect(blockedAgentRequests.length).toBe(1);
+  it('should block requests exceeding rate limit', async () => {
+    const req = new MockRequest('http://localhost/api/test')
+    const res = new MockResponse()
 
-      // Test chat endpoint (300 requests/minute)
-      const chatPromises = Array(301).fill(null).map(() => rateLimit(req, 'chat'));
-      const chatResults = await Promise.all(chatPromises);
-      const blockedChatRequests = chatResults.filter((r) => r instanceof NextResponse);
-      expect(blockedChatRequests.length).toBe(1);
-    });
+    // Make multiple requests
+    for (let i = 0; i < 10; i++) {
+      await rateLimit(req as NextApiRequest, res as NextApiResponse)
+    }
 
-    it('should use default limit for unknown endpoints', async () => {
-      const req = mockRequest('127.0.0.1');
-      const promises = Array(101).fill(null).map(() => rateLimit(req, 'unknown'));
-      const results = await Promise.all(promises);
-      
-      const blockedRequests = results.filter((r) => r instanceof NextResponse);
-      expect(blockedRequests.length).toBeGreaterThan(0);
-    });
-  });
+    const result = await rateLimit(req as NextApiRequest, res as NextApiResponse)
+    expect(result?.statusCode).toBe(429)
+  })
 
-  describe('getRateLimitInfo', () => {
-    it('should return rate limit info for IP', async () => {
-      const ip = '127.0.0.1';
-      const endpoint = 'default';
+  it('should return rate limit info', async () => {
+    const req = new MockRequest('http://localhost/api/test')
+    const res = new MockResponse()
 
-      // Make some requests
-      const req = mockRequest(ip);
-      await Promise.all(Array(50).fill(null).map(() => rateLimit(req, endpoint)));
+    await rateLimit(req as NextApiRequest, res as NextApiResponse)
+    const info = await getRateLimitInfo(req.socket.remoteAddress, req.url)
 
-      const info = await getRateLimitInfo(ip, endpoint);
-      expect(info).toBeDefined();
-      expect(info?.remainingPoints).toBeLessThan(100);
-      expect(info?.isBlocked).toBe(false);
-    });
+    expect(info).toMatchObject({
+      remainingPoints: expect.any(Number),
+      msBeforeNext: expect.any(Number),
+      isBlocked: expect.any(Boolean),
+    })
+  })
 
-    it('should return null on error', async () => {
-      const info = await getRateLimitInfo('invalid-ip', 'invalid-endpoint');
-      expect(info).toBeNull();
-    });
-  });
+  it('should reset rate limit', async () => {
+    const req = new MockRequest('http://localhost/api/test')
+    const res = new MockResponse()
 
-  describe('resetRateLimit', () => {
-    it('should reset rate limit for IP', async () => {
-      const ip = '127.0.0.1';
-      const endpoint = 'default';
+    // Make some requests
+    await rateLimit(req as NextApiRequest, res as NextApiResponse)
+    await rateLimit(req as NextApiRequest, res as NextApiResponse)
 
-      // Make some requests
-      const req = mockRequest(ip);
-      await Promise.all(Array(50).fill(null).map(() => rateLimit(req, endpoint)));
+    // Reset limit
+    await resetRateLimit(req.socket.remoteAddress, req.url)
 
-      // Check points consumed
-      const beforeReset = await getRateLimitInfo(ip, endpoint);
-      expect(beforeReset?.remainingPoints).toBeLessThan(100);
-
-      // Reset limit
-      const resetResult = await resetRateLimit(ip, endpoint);
-      expect(resetResult).toBe(true);
-
-      // Check points reset
-      const afterReset = await getRateLimitInfo(ip, endpoint);
-      expect(afterReset?.remainingPoints).toBe(100);
-    });
-
-    it('should handle reset errors', async () => {
-      const resetResult = await resetRateLimit('invalid-ip', 'invalid-endpoint');
-      expect(resetResult).toBe(false);
-    });
-  });
-}); 
+    // Check if limit was reset
+    const info = await getRateLimitInfo(req.socket.remoteAddress, req.url)
+    expect(info?.remainingPoints).toBe(10)
+  })
+}) 

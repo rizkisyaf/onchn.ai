@@ -1,22 +1,24 @@
 /** @type {import('jest').Config} */
 const config = {
+  preset: 'ts-jest',
   testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
+    '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
   },
   transform: {
-    '^.+\\.(ts|tsx|js|jsx)$': 'babel-jest',
+    '^.+\\.(ts|tsx)$': ['ts-jest', {
+      tsconfig: 'tsconfig.jest.json',
+      useESM: true,
+    }],
   },
-  testMatch: [
-    '**/__tests__/**/*.test.(ts|tsx)',
-  ],
   transformIgnorePatterns: [
     'node_modules/(?!(@solana|@jup-ag|uuid|jayson|@tensorflow)/)',
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
-}
+};
 
 module.exports = config
 

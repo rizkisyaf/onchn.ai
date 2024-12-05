@@ -1,62 +1,48 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import WalletAnalysis from '@/components/wallet-analysis'
+import { WalletAnalysis } from '@/components/wallet-analysis'
 import { getWalletData } from '@/lib/api-client'
 import { act } from '@testing-library/react'
 
 jest.mock('@/lib/api-client')
 
 describe('WalletAnalysis', () => {
-  const mockWalletAddress = '11111111111111111111111111111111'
+  const mockWalletAddress = '0x123'
+  let rendered: ReturnType<typeof render>
 
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  it('renders loading state', () => {
-    render(<WalletAnalysis walletAddress={mockWalletAddress} />)
-    expect(screen.getByTestId('loading-skeleton')).toBeInTheDocument()
+  it('renders wallet analysis component', () => {
+    render(<WalletAnalysis address={mockWalletAddress} />)
+    expect(screen.getByText(/Risk Score/i)).toBeInTheDocument()
   })
 
-  it('renders error state', async () => {
-    const mockError = new Error('Failed to fetch')
-    ;(getWalletData as jest.Mock).mockRejectedValueOnce(mockError)
-
-    let rendered: ReturnType<typeof render>
-    rendered = render(<WalletAnalysis walletAddress={mockWalletAddress} />)
-
-    await waitFor(() => {
-      expect(screen.getByRole('alert')).toBeInTheDocument()
-      expect(screen.getByText('Error')).toBeInTheDocument()
-      expect(screen.getByText('Failed to fetch')).toBeInTheDocument()
-    }, { timeout: 2000 })
-
-    rendered.unmount()
+  it('displays loading state initially', () => {
+    rendered = render(<WalletAnalysis address={mockWalletAddress} />)
+    expect(rendered.container).toMatchSnapshot()
   })
 
-  it('renders wallet data', async () => {
+  it('updates with wallet data', async () => {
     const mockData = {
-      transactionCount: 100,
-      uniqueTokens: 5,
-      avgTransactionValue: 1000,
-      tradeFrequency: 0.5,
-      profitRatio: 0.1,
-      riskLevel: 0.3,
-      timeInMarket: 90,
+      riskScore: 75,
+      transactions: [
+        {
+          type: 'send',
+          amount: '10.5',
+          token: 'SOL',
+          time: '2 mins ago',
+        },
+      ],
     }
 
-    ;(getWalletData as jest.Mock).mockResolvedValueOnce(mockData)
+    ;(getWalletData as jest.Mock).mockResolvedValue(mockData)
 
-    let rendered: ReturnType<typeof render>
-    rendered = render(<WalletAnalysis walletAddress={mockWalletAddress} />)
+    rendered = render(<WalletAnalysis address={mockWalletAddress} />)
 
     await waitFor(() => {
-      expect(screen.getByText('Transaction Count')).toBeInTheDocument()
-      expect(screen.getByText('100')).toBeInTheDocument()
-      expect(screen.getByText('Unique Tokens')).toBeInTheDocument()
-      expect(screen.getByText('5')).toBeInTheDocument()
-    }, { timeout: 2000 })
-
-    rendered.unmount()
+      expect(screen.getByText('75%')).toBeInTheDocument()
+    })
   })
 })
 

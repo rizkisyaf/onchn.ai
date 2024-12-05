@@ -3,13 +3,9 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "esModuleInterop": true,
+    "module": "ESNext",
     "moduleResolution": "node",
     "isolatedModules": false,
-    "types": ["jest", "node", "@testing-library/jest-dom"]
-  },
-  "include": [
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "jest.setup.ts"
-  ]
+    "allowJs": true
+  }
 } 

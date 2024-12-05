@@ -20,9 +20,10 @@ export function useAutoTrader(): AutoTraderHookResult {
   const [lastTrade, setLastTrade] = useState<TradeResult | null>(null)
   const [parameters, setParameters] = useState<TradeParams | null>(null)
   const [autoTrader, setAutoTrader] = useState<AutoTrader | null>(null)
+  const wallet = useWallet()
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'test') {
       const connection = new Connection('https://api.devnet.solana.com')
       const userPublicKey = new PublicKey('11111111111111111111111111111111')
       const trader = new AutoTrader(connection, userPublicKey)
@@ -35,23 +36,22 @@ export function useAutoTrader(): AutoTraderHookResult {
       process.env.NEXT_PUBLIC_SOLANA_RPC_URL!,
       { commitment: 'confirmed' }
     )
-    const wallet = useWallet() // Assuming you're using @solana/wallet-adapter
     
     if (wallet.publicKey) {
       const trader = new AutoTrader(connection, wallet.publicKey)
       trader.init().then(() => setAutoTrader(trader))
     }
-  }, [])
+  }, [wallet.publicKey])
 
   const startTrading = useCallback(
     async (params: TradeParams) => {
       if (!autoTrader) return
 
-      setIsTrading(true)
-      setError(null)
-      setParameters(params)
-
       try {
+        setIsTrading(true)
+        setError(null)
+        setParameters(params)
+
         const result = await autoTrader.executeTradeStrategy(params)
         if (result.success) {
           setLastTrade(result)

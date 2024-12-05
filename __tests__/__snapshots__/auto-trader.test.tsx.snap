@@ -1,0 +1,349 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AutoTrader shows loading state when active 1`] = `
+<div>
+  <div
+    class="space-y-6"
+  >
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 gap-6"
+    >
+      <div
+        style="opacity: 0; transform: translateY(20px);"
+      >
+        <div
+          class="bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10"
+        >
+          <h3
+            class="text-sm font-medium text-gray-400 mb-2"
+          >
+            Balance
+          </h3>
+          <p
+            class="text-2xl font-bold"
+          >
+            0.00
+             SOL
+          </p>
+        </div>
+      </div>
+      <div
+        style="opacity: 0; transform: translateY(20px);"
+      >
+        <div
+          class="bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10"
+        >
+          <h3
+            class="text-sm font-medium text-gray-400 mb-2"
+          >
+            Profit/Loss
+          </h3>
+          <p
+            class="text-2xl font-bold text-green-500"
+          >
+            +
+            0.00
+             SOL
+          </p>
+        </div>
+      </div>
+      <div
+        style="opacity: 0; transform: translateY(20px);"
+      >
+        <div
+          class="bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10"
+        >
+          <h3
+            class="text-sm font-medium text-gray-400 mb-2"
+          >
+            Total Trades
+          </h3>
+          <p
+            class="text-2xl font-bold"
+          >
+            0
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      style="opacity: 0; transform: translateY(20px);"
+    >
+      <div
+        class="bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10"
+      >
+        <h3
+          class="text-xl font-semibold mb-4"
+        >
+          Trading Settings
+        </h3>
+        <div
+          class="space-y-6"
+        >
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
+            <div
+              class="space-y-2"
+            >
+              <label
+                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Maximum Trade Size
+              </label>
+              <input
+                class="flex h-10 w-full rounded-full border px-4 py-2 text-sm backdrop-blur-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50 bg-white/5 border-white/10"
+                placeholder="0.00"
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              class="space-y-2"
+            >
+              <label
+                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Stop Loss (%)
+              </label>
+              <input
+                class="flex h-10 w-full rounded-full border px-4 py-2 text-sm backdrop-blur-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50 bg-white/5 border-white/10"
+                placeholder="0.00"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            class="flex items-center justify-between"
+          >
+            <div
+              class="space-y-1"
+            >
+              <label
+                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Auto Compound Profits
+              </label>
+              <p
+                class="text-sm text-gray-400"
+              >
+                Automatically reinvest profits into new trades
+              </p>
+            </div>
+            <button
+              aria-checked="false"
+              class="peer inline-flex h-[24px] w-[44px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input"
+              data-state="unchecked"
+              role="switch"
+              type="button"
+              value="on"
+            >
+              <span
+                class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+                data-state="unchecked"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="opacity: 0; transform: translateY(20px);"
+    >
+      <div
+        class="bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10"
+      >
+        <h3
+          class="text-xl font-semibold mb-4"
+        >
+          Recent Trades
+        </h3>
+        <div
+          class="space-y-4"
+        >
+          <p
+            class="text-gray-400 text-center py-4"
+          >
+            No trades yet
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`AutoTrader updates when new trade occurs 1`] = `
+<div>
+  <div
+    class="space-y-6"
+  >
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 gap-6"
+    >
+      <div
+        style="opacity: 0; transform: translateY(20px);"
+      >
+        <div
+          class="bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10"
+        >
+          <h3
+            class="text-sm font-medium text-gray-400 mb-2"
+          >
+            Balance
+          </h3>
+          <p
+            class="text-2xl font-bold"
+          >
+            0.00
+             SOL
+          </p>
+        </div>
+      </div>
+      <div
+        style="opacity: 0; transform: translateY(20px);"
+      >
+        <div
+          class="bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10"
+        >
+          <h3
+            class="text-sm font-medium text-gray-400 mb-2"
+          >
+            Profit/Loss
+          </h3>
+          <p
+            class="text-2xl font-bold text-green-500"
+          >
+            +
+            0.00
+             SOL
+          </p>
+        </div>
+      </div>
+      <div
+        style="opacity: 0; transform: translateY(20px);"
+      >
+        <div
+          class="bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10"
+        >
+          <h3
+            class="text-sm font-medium text-gray-400 mb-2"
+          >
+            Total Trades
+          </h3>
+          <p
+            class="text-2xl font-bold"
+          >
+            0
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      style="opacity: 0; transform: translateY(20px);"
+    >
+      <div
+        class="bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10"
+      >
+        <h3
+          class="text-xl font-semibold mb-4"
+        >
+          Trading Settings
+        </h3>
+        <div
+          class="space-y-6"
+        >
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
+            <div
+              class="space-y-2"
+            >
+              <label
+                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Maximum Trade Size
+              </label>
+              <input
+                class="flex h-10 w-full rounded-full border px-4 py-2 text-sm backdrop-blur-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50 bg-white/5 border-white/10"
+                placeholder="0.00"
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              class="space-y-2"
+            >
+              <label
+                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Stop Loss (%)
+              </label>
+              <input
+                class="flex h-10 w-full rounded-full border px-4 py-2 text-sm backdrop-blur-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50 bg-white/5 border-white/10"
+                placeholder="0.00"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            class="flex items-center justify-between"
+          >
+            <div
+              class="space-y-1"
+            >
+              <label
+                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Auto Compound Profits
+              </label>
+              <p
+                class="text-sm text-gray-400"
+              >
+                Automatically reinvest profits into new trades
+              </p>
+            </div>
+            <button
+              aria-checked="false"
+              class="peer inline-flex h-[24px] w-[44px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input"
+              data-state="unchecked"
+              role="switch"
+              type="button"
+              value="on"
+            >
+              <span
+                class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+                data-state="unchecked"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="opacity: 0; transform: translateY(20px);"
+    >
+      <div
+        class="bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10"
+      >
+        <h3
+          class="text-xl font-semibold mb-4"
+        >
+          Recent Trades
+        </h3>
+        <div
+          class="space-y-4"
+        >
+          <p
+            class="text-gray-400 text-center py-4"
+          >
+            No trades yet
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
